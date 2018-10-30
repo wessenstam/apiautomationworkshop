@@ -1,13 +1,42 @@
-.. title:: Introduction to Nutanix AHV
+.. title:: Nutanix API & Automation Workshop
 
 .. toctree::
   :maxdepth: 2
-  :caption: Labs
-  :name: _labs
+  :caption: Technology Overview
+  :name: _technology_overview
   :hidden:
 
-  examplelab1/examplelab1
-  examplelab2/examplelab2
+  what_is_nutanix/what_is_nutanix
+  nutanix_terminology/nutanix_terminology
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Nutanix REST API
+  :name: _nutanix_rest_api
+  :hidden:
+
+  rest_overview/rest_overview
+  rest_nutanix_api_introduction/rest_nutanix_api_introduction
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Ansible
+  :name: _ansible
+  :hidden:
+
+  ansible_architecture/ansible_architecture
+  ansible_install/ansible_install
+  ansible_basics/ansible_basics
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Nutanix REST APIs with Ansible
+  :name: _nutanix_rest_apis_with_ansible
+  :hidden:
+
+  ansible_lamp_playbook/ansible_lamp_playbook
 
 .. toctree::
   :maxdepth: 2
@@ -15,7 +44,7 @@
   :name: _optional_labs
   :hidden:
 
-  examplelab3/examplelab3
+  ansible_modules/ansible_modules
 
 .. toctree::
   :maxdepth: 2
@@ -24,7 +53,7 @@
   :hidden:
 
   appendix/glossary
-  appendix/otherstuff
+  appendix/basics
 
 .. _getting_started:
 
@@ -32,15 +61,154 @@
 Getting Started
 ---------------
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed velit odio, ultrices sed elementum vitae, dictum eget turpis. Etiam ultrices orci quis tempus tempus. Nulla non nibh imperdiet, suscipit risus quis, eleifend nisl. Morbi at posuere nibh, quis bibendum dui. Morbi dictum sem a ipsum bibendum condimentum. Suspendisse id ante gravida, efficitur leo a, consequat enim. Suspendisse tempor lorem vel purus scelerisque, vel facilisis lorem consequat. Pellentesque augue orci, iaculis vel mollis sit amet, scelerisque a tellus. Aliquam commodo in lectus feugiat porta.
+Welcome to the Nutanix API & Automation Workshop! This workbook accompanies an instructor-led session that introduces Nutanix REST API and many common management tasks. Each section has a lesson and an exercise to give you hands-on practice. The instructor explains the exercises and answers any additional questions that you may have.
+
+At the end of the workshop, attendees should understand the basic concepts and technologies to use the Nutanix REST APIs and should be well prepared to demo and talk about them.
 
 What's New
 ++++++++++
 
 - Workshop updated for the following software versions:
-  - AOS 5.6
-  - AFS 3.0
-- Added :ref:`example_lab_3`
+    - AOS|PC 5.9.0
+
+
+- Optional Lab Updates:
+
+
+Agenda
+++++++
+
+- Introductions
+- Technology Overview
+- Nutanix Calm
+- Nutanix Calm Lab
+- Optional Labs
+  - Ansible Lab
+  - Flow Lab
+
+Introductions
++++++++++++++
+
+- Name
+- Familiarity with Nutanix
+
+Initial Setup
++++++++++++++
+
+- Take note of the *Passwords* being used.
+- Log into your virtual desktops (connection info below)
+
+Environment Details
++++++++++++++++++++
+
+Nutanix Workshops are intended to be run in the Nutanix Hosted POC environment. Your cluster will be provisioned with all necessary images, networks, and VMs required to complete the exercises.
+
+Networking
+..........
+
+Hosted POC clusters follow a standard naming convention:
+
+- **Cluster Name** - POC\ *XYZ*
+- **Subnet** - 10.**21**.\ *XYZ*\ .0
+- **Cluster IP** - 10.**21**.\ *XYZ*\ .37
+
+If provisioned from the marketing pool:
+
+- **Cluster Name** - MKT\ *XYZ*
+- **Subnet** - 10.**20**.\ *XYZ*\ .0
+- **Cluster IP** - 10.**20**.\ *XYZ*\ .37
+
+For example:
+
+- **Cluster Name** - POC055
+- **Subnet** - 10.21.55.0
+- **Cluster IP** - 10.21.55.37
+
+Throughout the Workshop there are multiple instances where you will need to substitute *XYZ* with the correct octet for your subnet, for example:
+
+.. list-table::
+  :widths: 25 75
+  :header-rows: 1
+
+  * - IP Address
+    - Description
+  * - 10.21.\ *XYZ*\ .37
+    - Nutanix Cluster Virtual IP
+  * - 10.21.\ *XYZ*\ .39
+    - **PC** VM IP, Prism Central
+  * - 10.21.\ *XYZ*\ .40
+    - **DC** VM IP, NTNXLAB.local Domain Controller
+
+Each cluster is configured with 2 VLANs which can be used for VMs:
+
+.. list-table::
+  :widths: 25 25 10 40
+  :header-rows: 1
+
+  * - Network Name
+    - Address
+    - VLAN
+    - DHCP Scope
+  * - Primary
+    - 10.21.\ *XYZ*\ .1/25
+    - 0
+    - 10.21.\ *XYZ*\ .50-10.21.\ *XYZ*\ .124
+  * - Secondary
+    - 10.21.\ *XYZ*\ .129/25
+    - *XYZ1*
+    - 10.21.\ *XYZ*\ .132-10.21.\ *XYZ*\ .253
+
+Credentials
+...........
+
+.. note::
+
+  The *<Cluster Password>* is unique to each cluster and will be provided by the leader of the Workshop.
+
+.. list-table::
+  :widths: 25 35 40
+  :header-rows: 1
+
+  * - Credential
+    - Username
+    - Password
+  * - Prism Element
+    - admin
+    - *<Cluster Password>*
+  * - Prism Central
+    - admin
+    - *<Cluster Password>*
+  * - Controller VM
+    - nutanix
+    - *<Cluster Password>*
+  * - Prism Central VM
+    - nutanix
+    - *<Cluster Password>*
+
+Each cluster has a dedicated domain controller VM, **DC**, responsible for providing AD services for the **NTNXLAB.local** domain. The domain is populated with the following Users and Groups:
+
+.. list-table::
+  :widths: 25 35 40
+  :header-rows: 1
+
+  * - Group
+    - Username(s)
+    - Password
+  * - Administrators
+    - Administrator
+    - nutanix/4u
+  * - SSP Admins
+    - adminuser01-adminuser25
+    - nutanix/4u
+  * - SSP Developers
+    - devuser01-devuser25
+    - nutanix/4u
+  * - SSP Power Users
+    - poweruser01-poweruser25
+    - nutanix/4u
+  * - SSP Basic Users
+    - basicuser01-basicuser25
+    - nutanix/4u
 
 Access Instructions
 +++++++++++++++++++

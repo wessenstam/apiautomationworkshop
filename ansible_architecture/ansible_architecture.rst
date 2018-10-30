@@ -1,6 +1,11 @@
-********************
+.. _ansible_architecture:
+
+--------------------
 Ansible Architecture
-********************
+--------------------
+
+Ansible Overview
+++++++++++++++++
 
 Ansible is a radically simple IT automation engine that automates cloud provisioning, configuration management, application deployment, intra-service orchestration, and many other IT needs.
 
@@ -69,13 +74,13 @@ Here’s what a simple playbook looks like:
 Should you want to write your own, Ansible modules can be written in any language that can return JSON (Ruby, Python, bash, etc). Inventory can also plug in to any datasource by writing a program that speaks to that datasource and returns JSON. There’s also various Python APIs for extending Ansible’s connection types (SSH is not the only transport possible), callbacks (how Ansible logs, etc), and even for adding new server side behaviors.
 
 Ansible Production Modules
-**************************
+++++++++++++++++++++++++++
 
 Ansible ships with a number of modules (called the ‘module library’) that can be executed directly on remote hosts or through Playbooks.
 
 Users can also write their own modules. These modules can control system resources, like services, packages, or files (anything really), or handle executing system commands.
 
-Ansible-Modules_
+.. _ansible_modules:
 
-
-.. _Ansible-Modules: http://docs.ansible.com/ansible/latest/modules_by_category.html
+.. note::
+  Ansible Modules: http://docs.ansible.com/ansible/latest/modules_by_category.html
